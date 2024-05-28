@@ -1,0 +1,100 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                      Int              @id @default(autoincrement())
+  parcode                 String           @unique
+  full_name               String
+  type                    UserType
+  phone_number            String
+  gender                  Gender
+  dob                     DateTime?        @map(name: "date_of_birth")
+  password                String           @default(dbgenerated("CONCAT(phone_number, '-default-password')"))
+  subscription_type       SubscriptionType
+  subscription_date       DateTime
+  subscription_start_date DateTime
+  subscription_months     Int
+  subscription_classes    Int
+  remaining_classes       Int
+  subscription_end_date   DateTime
+  training_name           String?
+  paid                    Boolean
+  reminder                Boolean
+  status                  UserStatus
+  offer_name              String?
+  medical_problem         String?
+  surgeries               String?
+  goal                    String?
+  sunday_note             String?
+  monday_note             String?
+  tuesday_note            String?
+  wednesday_note          String?
+  thursday_note           String?
+  friday_note             String?
+  saturday_note           String?
+  general_note            String?
+
+  inBodies    InBody[]     @relation("user_inbody")
+  attendances Attendance[] @relation("user_attendance")
+}
+
+model InBody {
+  id                Int      @id @default(autoincrement())
+  user              User     @relation("user_inbody", fields: [userId], references: [id])
+  userId            Int
+  BMI               Float
+  current_situation String
+  daily_water_need  Float
+  calories_required Float
+  muscle_weight     Float
+  fat_mass          Float
+  bone_density      Float
+  belly_fat         Float
+  diet_file         String?
+  date              DateTime
+  length            Float
+  weight            Float
+  shoulder          Float
+  chest             Float
+  below_chest       Float
+  middle            Float
+  stomach           Float
+  buttocks          Float
+  thigh             Float
+  arm               Float
+}
+
+model Attendance {
+  id     Int      @id @default(autoincrement())
+  user   User     @relation("user_attendance", fields: [userId], references: [id])
+  userId Int
+  date   DateTime
+}
+
+enum UserType {
+  COACH
+  TRAINEE
+  SECRETARY
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum SubscriptionType {
+  PRIVATE
+  NOT_PRIVATE
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  PENDING
+}
