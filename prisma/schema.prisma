@@ -86,7 +86,7 @@ model InBody {
   id                Int      @id @default(autoincrement())
   traineeId         Int
   trainee           Trainee  @relation("TraineeInBodies", fields: [traineeId], references: [id])
-  date              DateTime
+  date              DateTime @default(now())
 
   // Body measurements
   length            Float
@@ -116,5 +116,5 @@ model Attendance {
   id         Int      @id @default(autoincrement())
   traineeId  Int
   trainee    Trainee  @relation("TraineeAttendances", fields: [traineeId], references: [id])
-  date       DateTime
+  date       DateTime @default(now())
 }

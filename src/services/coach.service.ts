@@ -1,3 +1,4 @@
+import { AdminWithoutPassword } from '../helpers/ExcludePassword';
 import prisma from '../infrastructure/database/prisma';
 import { Prisma } from '@prisma/client';
 
@@ -16,21 +17,14 @@ class CoachService {
 
   async getCoaches() {
     return await prisma.coach.findMany({
-      select: {
-        id: true,
-        phoneNumber: true,
-        fullName: true,
-        gender: true,
-        dob: true,
-        password: false,
-      },
+      select: AdminWithoutPassword,
     });
   }
 
   async getCoachById(id: number) {
     return await prisma.coach.findUnique({
       where: { id },
-      select: { password: false },
+      select: AdminWithoutPassword,
     });
   }
 
@@ -38,6 +32,7 @@ class CoachService {
     return await prisma.coach.update({
       where: { id },
       data,
+      select: AdminWithoutPassword,
     });
   }
 

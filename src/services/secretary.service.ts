@@ -1,4 +1,5 @@
 // src/services/secretary.service.ts
+import { AdminWithoutPassword } from '../helpers/ExcludePassword';
 import prisma from '../infrastructure/database/prisma';
 import { Prisma } from '@prisma/client';
 
@@ -7,30 +8,34 @@ class SecretaryService {
     return await prisma.secretary.create({ data });
   }
 
+  async checkIfDuplicate(phoneNumber: string) {
+    const secretary = await prisma.secretary.findUnique({
+      where: { phoneNumber },
+    });
+    return !!secretary;
+  }
+  
   async getSecretaries() {
-    return await prisma.secretary.findMany();
+    return await prisma.secretary.findMany({ select: AdminWithoutPassword });
   }
 
   async getSecretaryById(id: number) {
-    return await prisma.secretary.findUnique({ where: { id } });
+    return await prisma.secretary.findUnique({
+      where: { id },
+      select: AdminWithoutPassword,
+    });
   }
 
   async updateSecretary(id: number, data: Prisma.SecretaryUpdateInput) {
     return await prisma.secretary.update({
       where: { id },
       data,
+      select: AdminWithoutPassword,
     });
   }
 
   async deleteSecretary(id: number) {
     return await prisma.secretary.delete({ where: { id } });
-  }
-
-  async checkIfDuplicate(phoneNumber: string) {
-    const secretary = await prisma.secretary.findUnique({
-      where: { phoneNumber },
-    });
-    return !!secretary;
   }
 }
 

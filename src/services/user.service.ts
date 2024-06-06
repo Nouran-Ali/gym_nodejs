@@ -1,3 +1,7 @@
+import {
+  AdminWithoutPassword,
+  TraineeWithoutPassword,
+} from '../helpers/ExcludePassword';
 import prisma from '../infrastructure/database/prisma';
 
 class UserService {
@@ -12,6 +16,33 @@ class UserService {
 
     const trainee = await prisma.trainee.findUnique({ where: { phoneNumber } });
     if (trainee) return { ...trainee, userType: 'TRAINEE' };
+
+    return null;
+  }
+
+  async findUserById(id: number, userType: string) {
+    let user;
+
+    if (userType === 'COACH') {
+      user = await prisma.coach.findUnique({
+        where: { id },
+      });
+    } else if (userType === 'SECRETARY') {
+      user = await prisma.secretary.findUnique({
+        where: { id },
+      });
+    } else if (userType === 'TRAINEE') {
+      user = await prisma.trainee.findUnique({
+        where: { id },
+        include: {
+          inBodies: true,
+        },
+      });
+    }
+    if (user) {
+      const { password, ...userWithoutPassword } = user;
+      return userWithoutPassword;
+    }
 
     return null;
   }

@@ -8,17 +8,17 @@ import { upload } from '../../config/multer.config';
 
 const router = Router();
 
-router.get('/coaches', CoachController.getAllCoaches);
-router.post(
-  '/coaches',
-  upload.none(),
-  validateSchema(createCoachSchema),
-  CoachController.createCoach
-);
-router.put(
-  '/coaches/:id',
-  validateSchema(updateCoachSchema),
-  CoachController.updateCoach
-);
+// router.get('/coaches', CoachController.getAllCoaches);
+// router.post(
+//   '/coaches',
+//   upload.none(),
+//   validateSchema(createCoachSchema),
+//   CoachController.createCoach
+// );
+// router.put(
+//   '/coaches/:id',
+//   validateSchema(updateCoachSchema),
+//   CoachController.updateCoach
+// );
 
 export default router;

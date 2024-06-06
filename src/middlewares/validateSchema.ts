@@ -14,7 +14,9 @@ export function validateSchema(schema: Schema) {
           errorObject[detail.path.join('.')] = detail.message;
         });
       }
-      res.status(400).json({ error: 'Validation Error', details: errorObject });
+      res
+        .status(400)
+        .json({ errorCode: 'VALIDATION_ERROR', details: errorObject });
     } else {
       next();
     }

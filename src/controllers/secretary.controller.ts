@@ -31,7 +31,6 @@ class SecretaryController {
       );
       res.status(201).json(secretary);
     } catch (error: any) {
-      console.log(error);
       next(error);
     }
   }
