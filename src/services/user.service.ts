@@ -1,3 +1,6 @@
+import LoginDTO from '../dtos/auth.dto';
+import { UnauthorizedError } from '../errors/UnauthorizedError';
+import { Bcrypt } from '../helpers/Bcrypt';
 import {
   AdminWithoutPassword,
   TraineeWithoutPassword,
@@ -5,6 +8,7 @@ import {
 import prisma from '../infrastructure/database/prisma';
 
 class UserService {
+
   async findUserByPhoneNumber(phoneNumber: string) {
     const coach = await prisma.coach.findUnique({ where: { phoneNumber } });
     if (coach) return { ...coach, userType: 'COACH' };

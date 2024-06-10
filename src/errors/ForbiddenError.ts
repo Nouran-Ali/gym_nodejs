@@ -1,11 +1,9 @@
-// src/errors/ForbiddenError.ts
-export class ForbiddenError extends Error {
-  public statusCode: number;
+// ForbiddenError.ts
+import { AppError, ErrorObject } from './AppError';
 
-  constructor(message: string) {
-    super(message);
-    this.name = 'ForbiddenError';
-    this.statusCode = 403;
-    Error.captureStackTrace(this, this.constructor);
+export class ForbiddenError extends AppError {
+  constructor(message: string, errors?: ErrorObject) {
+    super(403, message, errors);
+    this.name = this.constructor.name;
   }
 }

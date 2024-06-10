@@ -1,24 +1,27 @@
 import { Router } from 'express';
-import InBodyController from '../../controllers/inbody.controller';
-import { validateSchema } from '../../middlewares/validateSchema';
-import { createInBodySchema } from '../../dtos/inbody.dto';
-import { authMiddleware } from '../../middlewares/authMiddleware';
-import { upload } from '../../config/multer.config';
-import { createAttendanceSchema } from '../../dtos/attendance.dto';
 import attendanceController from '../../controllers/attendance.controller';
+import { createAttendanceSchema } from '../../dtos/attendance.dto';
+import { authMiddleware } from '../../middlewares/authMiddleware';
 
 const router = Router();
 
-// Route to create InBody
 router.post(
   '/attendance/:parcode',
   authMiddleware,
+  // validateSchema(createAttendanceSchema),
   attendanceController.createAttendance
 );
 
-router.get('/attendance', authMiddleware, attendanceController.getAllAttendances);
-router.get('/attendance/:traineeId', authMiddleware, attendanceController.getAttendanceByTraineeId);
+router.get(
+  '/attendance',
+  authMiddleware,
+  attendanceController.getAllAttendances
+);
 
-// Add more routes as needed
+router.get(
+  '/attendance/:traineeId',
+  authMiddleware,
+  attendanceController.getAttendanceByTraineeId
+);
 
 export default router;

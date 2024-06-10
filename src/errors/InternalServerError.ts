@@ -1,11 +1,9 @@
-// src/errors/InternalServerError.ts
-export class InternalServerError extends Error {
-  public statusCode: number;
+// InternalServerError.ts
+import { AppError, ErrorObject } from './AppError';
 
-  constructor(message: string = 'Internal Server Error') {
-    super(message);
-    this.name = 'InternalServerError';
-    this.statusCode = 500;
-    Error.captureStackTrace(this, this.constructor);
+export class InternalServerError extends AppError {
+  constructor(message: string, errors?: ErrorObject) {
+    super(500, message, errors);
+    this.name = this.constructor.name;
   }
 }

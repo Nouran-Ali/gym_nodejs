@@ -1,7 +1,6 @@
 // src/routes/inbody.routes.ts
 
 import { Router } from 'express';
-import { validateSchema } from '../../middlewares/validateSchema';
 import { createInBodySchema } from '../../dtos/inbody.dto';
 import { authMiddleware } from '../../middlewares/authMiddleware';
 import { upload } from '../../config/multer.config';
@@ -12,9 +11,8 @@ const router = Router();
 
 router.get(
   '/files/',
-  upload.none(),
   authMiddleware,
-  validateSchema(getFileSchema),
+  // validateSchema(getFileSchema),
   fileController.getFile
 );
 

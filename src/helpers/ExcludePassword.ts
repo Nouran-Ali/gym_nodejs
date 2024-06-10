@@ -38,4 +38,6 @@ export const TraineeWithoutPassword: { [key: string]: boolean } = {
   fridayNote: true,
   saturdayNote: true,
   generalNote: true,
+  idFace: true,
+  idBack: true,
 };

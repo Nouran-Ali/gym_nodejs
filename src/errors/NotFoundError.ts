@@ -1,11 +1,9 @@
-// src/errors/NotFoundError.ts
-export class NotFoundError extends Error {
-  public statusCode: number;
+// NotFoundError.ts
+import { AppError, ErrorObject } from './AppError';
 
-  constructor(message: string) {
-    super(message);
-    this.name = 'NotFoundError';
-    this.statusCode = 404;
-    Error.captureStackTrace(this, this.constructor);
+export class NotFoundError extends AppError {
+  constructor(message: string, errors?: ErrorObject) {
+    super(404, message, errors);
+    this.name = this.constructor.name;
   }
 }

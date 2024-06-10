@@ -23,26 +23,28 @@ enum SubscriptionStatus {
   PENDING
 }
 
+enum UserType {
+  COACH
+  SECRETARY
+  TRAINEE
+}
+
 model Coach {
-  id          Int       @id @default(autoincrement())
-  phoneNumber String    @unique
+  id          Int      @id @default(autoincrement())
+  phoneNumber String   @unique
   fullName    String
   gender      Gender
-  dob         DateTime  @map("date_of_birth")
+  dob         DateTime @map("date_of_birth")
   password    String
-
-  // No relationships defined
 }
 
 model Secretary {
-  id          Int       @id @default(autoincrement())
-  phoneNumber String    @unique
+  id          Int      @id @default(autoincrement())
+  phoneNumber String   @unique
   fullName    String
   gender      Gender
-  dob         DateTime  @map("date_of_birth")
+  dob         DateTime @map("date_of_birth")
   password    String
-
-  // No relationships defined
 }
 
 model Trainee {
@@ -63,58 +65,61 @@ model Trainee {
   subscriptionEndDate   DateTime
   paid                  Int
   reminder              Int
+  idFace               String             @default("")
+  idBack               String             @default("")
 
-  trainingName          String?
-  offerName             String?
-  medicalProblem        String?
-  surgeries             String?
-  goal                  String?
-  sundayNote            String?
-  mondayNote            String?
-  tuesdayNote           String?
-  wednesdayNote         String?
-  thursdayNote          String?
-  fridayNote            String?
-  saturdayNote          String?
-  generalNote           String?
+  // optional
+  trainingName   String?
+  offerName      String?
+  medicalProblem String?
+  surgeries      String?
+  goal           String?
+  sundayNote     String?
+  mondayNote     String?
+  tuesdayNote    String?
+  wednesdayNote  String?
+  thursdayNote   String?
+  fridayNote     String?
+  saturdayNote   String?
+  generalNote    String?
 
-  inBodies              InBody[]           @relation("TraineeInBodies")
-  attendances           Attendance[]       @relation("TraineeAttendances")
+  inBodies    InBody[]     @relation("TraineeInBodies")
+  attendances Attendance[] @relation("TraineeAttendances")
 }
 
 model InBody {
-  id                Int      @id @default(autoincrement())
-  traineeId         Int
-  trainee           Trainee  @relation("TraineeInBodies", fields: [traineeId], references: [id])
-  date              DateTime @default(now())
+  id        Int      @id @default(autoincrement())
+  traineeId Int
+  trainee   Trainee  @relation("TraineeInBodies", fields: [traineeId], references: [id])
+  date      DateTime @default(now())
 
   // Body measurements
-  length            Float
-  weight            Float
-  shoulder          Float
-  chest             Float
-  belowChest        Float
-  middle            Float
-  stomach           Float
-  buttocks          Float
-  thigh             Float
-  arm               Float
+  length     Float
+  weight     Float
+  shoulder   Float
+  chest      Float
+  belowChest Float
+  middle     Float
+  stomach    Float
+  buttocks   Float
+  thigh      Float
+  arm        Float
 
   // Health metrics
-  BMI               Float
-  currentSituation  String
-  dailyWaterNeed    Float
-  caloriesRequired  Float
-  muscleWeight      Float
-  fatMass           Float
-  boneDensity       Float
-  bellyFat          Float
-  dietFile          String?
+  BMI              Float
+  currentSituation String
+  dailyWaterNeed   Float
+  caloriesRequired Float
+  muscleWeight     Float
+  fatMass          Float
+  boneDensity      Float
+  bellyFat         Float
+  dietFile         String?
 }
 
 model Attendance {
-  id         Int      @id @default(autoincrement())
-  traineeId  Int
-  trainee    Trainee  @relation("TraineeAttendances", fields: [traineeId], references: [id])
-  date       DateTime @default(now())
+  id        Int      @id @default(autoincrement())
+  traineeId Int
+  trainee   Trainee  @relation("TraineeAttendances", fields: [traineeId], references: [id])
+  date      DateTime @default(now())
 }

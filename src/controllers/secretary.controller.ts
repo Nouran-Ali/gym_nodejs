@@ -2,33 +2,25 @@
 import { Request, Response, NextFunction } from 'express';
 import SecretaryService from '../services/secretary.service';
 import { Bcrypt } from './../helpers/Bcrypt';
-import { DuplicateError } from '../errors/DuplicateError';
 import { Prisma } from '@prisma/client';
+import { NotFoundError } from '../errors/NotFoundError';
+import { ConflictError } from '../errors/ConflictError';
+import { CreateSecretaryDTO } from '../dtos/secretary.dto';
 
 class SecretaryController {
   async createSecretary(req: Request, res: Response, next: NextFunction) {
     try {
-      const { confirm_password, ...secretaryData } = req.body;
-      const hashedPassword = await Bcrypt.hash(confirm_password);
-
-      secretaryData.dob = new Date(secretaryData.dob);
-
-      let data: Prisma.SecretaryCreateInput = {
+      let {confirm_password, ...secretaryData}: CreateSecretaryDTO = req.body;
+      const data = {
         ...secretaryData,
+        dob: CreateSecretaryDTO.getFormattedDOB(secretaryData.dob),
         password: await Bcrypt.hash(secretaryData.password),
       };
-
-      const duplicate = await SecretaryService.checkIfDuplicate(
-        data.phoneNumber
-      );
-      if (duplicate) {
-        next(new DuplicateError('Phone number already exists'));
-        return;
-      }
 
       const { password, ...secretary } = await SecretaryService.createSecretary(
         data
       );
+      
       res.status(201).json(secretary);
     } catch (error: any) {
       next(error);
@@ -47,13 +39,13 @@ class SecretaryController {
   async getSecretaryById(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params;
     try {
-      const secretary = await SecretaryService.getSecretaryById(Number(id));
-      if (secretary) {
-        const { password, ...rest } = secretary;
-        res.status(200).json(rest);
-      } else {
-        res.status(404).json({ message: 'Secretary not found' });
+      const secretary: any = await SecretaryService.getSecretaryById(
+        Number(id)
+      );
+      if (!secretary) {
+        next(new NotFoundError('Secretary not found'));
       }
+      res.status(200).json(secretary);
     } catch (error: any) {
       next(error);
     }
@@ -61,15 +53,16 @@ class SecretaryController {
 
   async updateSecretary(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params;
-    const { password, ...data } = req.body;
+    const newSecretary = req.body;
+    if (newSecretary.dob) newSecretary.dob = new Date(newSecretary.dob);
     try {
-      if (password) {
-        data.password = await Bcrypt.hash(password);
+      const existed: any = await SecretaryService.getSecretaryById(Number(id));
+      if (!existed) {
+        next(new NotFoundError('Secretary not found'));
       }
-      const secretary = await SecretaryService.updateSecretary(
-        Number(id),
-        data
-      );
+      const secretary = await SecretaryService.updateSecretary(Number(id), {
+        ...newSecretary,
+      });
       res.status(200).json(secretary);
     } catch (error: any) {
       next(error);
@@ -79,8 +72,13 @@ class SecretaryController {
   async deleteSecretary(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params;
     try {
+      const secretary = await SecretaryService.getSecretaryById(+id);
+      if (!secretary) {
+        next(new NotFoundError('Secretary not found'));
+        return;
+      }
       await SecretaryService.deleteSecretary(Number(id));
-      res.status(204).send();
+      res.status(200).json({ message: 'Secretary deleted successfully' });
     } catch (error: any) {
       next(error);
     }

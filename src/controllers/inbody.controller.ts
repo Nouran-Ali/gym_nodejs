@@ -13,7 +13,7 @@ export class InBodyController {
     try {
       let inBodyData = req.body;
       let dietFile = req.file;
-      inBodyData.dietFile = `inbodies/${dietFile?.filename}`;
+      if (dietFile) inBodyData.dietFile = `inbodies/${dietFile?.filename}`;
 
       const notNumberAttributes = ['dietFile', 'currentSituation'];
 

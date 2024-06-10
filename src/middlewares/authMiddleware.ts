@@ -10,14 +10,12 @@ export const authMiddleware = (
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
-    console.error('No authorization header provided');
     throw new UnauthorizedError('No token provided');
   }
 
   const token = authHeader.split(' ')[1];
 
   if (!token) {
-    console.error('No token found in authorization header');
     throw new UnauthorizedError('No token provided');
   }
 
@@ -26,7 +24,6 @@ export const authMiddleware = (
     (req as any).user = decoded;
     next();
   } catch (error: any) {
-    console.error('Error during token verification:', error.message);
     throw new UnauthorizedError('Invalid token');
   }
 };
