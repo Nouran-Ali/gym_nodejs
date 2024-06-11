@@ -5,9 +5,11 @@ import {
   IsEnum,
   MinLength,
   Validate,
+  IsOptional,
 } from 'class-validator';
 import { Match } from '../helpers/MatchDecorator';
 import { IsDateFormat } from '../helpers/isDateFormat';
+import { Transform } from 'class-transformer';
 
 enum Gender {
   MALE = 'MALE',
@@ -58,23 +60,25 @@ export class CreateSecretaryDTO {
     this.password = password;
     this.confirm_password = confirm_password;
   }
-
-  static getFormattedDOB(dob: string): Date {
-    const [year, month, day] = dob.split('-').map(Number);
-    return new Date(year, month - 1, day);
-  }
 }
 
 export class UpdateSecretaryDTO {
+  @IsOptional()
   @IsString({ message: 'Phone number must be a string' })
   phoneNumber?: string;
 
+  @IsOptional()
   @IsString({ message: 'Full name must be a string' })
   fullName?: string;
 
+  @IsOptional()
   @IsEnum(Gender, { message: 'Gender must be either MALE or FEMALE' })
   gender?: Gender;
 
-  @IsDateString({}, { message: 'Date of birth must be a valid date string' })
-  dob?: Date;
+  @IsOptional()
+  @IsString({ message: 'Date of birth must be a string' })
+  @Validate(IsDateFormat, {
+    message: 'Invalid date format. Date must be in YYYY-MM-DD format',
+  })
+  dob?: string;
 }

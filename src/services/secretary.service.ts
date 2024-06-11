@@ -1,5 +1,6 @@
 // src/services/secretary.service.ts
 import { ConflictError } from '../errors/ConflictError';
+import { NotFoundError } from '../errors/NotFoundError';
 import { AdminWithoutPassword } from '../helpers/ExcludePassword';
 import prisma from '../infrastructure/database/prisma';
 import { Prisma } from '@prisma/client';
@@ -24,13 +25,23 @@ class SecretaryService {
   }
 
   async getSecretaryById(id: number) {
-    return await prisma.secretary.findUnique({
+    const secretary = await prisma.secretary.findUnique({
       where: { id },
       select: AdminWithoutPassword,
     });
+
+    if (!secretary) {
+      throw new NotFoundError('Secretary not found');
+    }
+
+    return secretary;
   }
 
   async updateSecretary(id: number, data: Prisma.SecretaryUpdateInput) {
+    const actual_data: any = { ...data };
+    if (data.dob) {
+      data.dob = new Date(actual_data.dob);
+    }
     return await prisma.secretary.update({
       where: { id },
       data,
@@ -39,6 +50,10 @@ class SecretaryService {
   }
 
   async deleteSecretary(id: number) {
+    const secretary = await this.getSecretaryById(id);
+    if (!secretary) {
+      throw new NotFoundError('Secretary not found');
+    }
     return await prisma.secretary.delete({ where: { id } });
   }
 }
