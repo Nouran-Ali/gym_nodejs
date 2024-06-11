@@ -3,7 +3,7 @@ import { Bcrypt } from './../helpers/Bcrypt';
 
 import { NextFunction, Request, Response } from 'express';
 import CoachService from '../services/coach.service';
-import { DuplicateError } from '../errors/DuplicateError';
+import { ConflictError } from '../errors/ConflictError';
 
 class CoachController {
   async createCoach(req: Request, res: Response, next: NextFunction) {
@@ -25,7 +25,7 @@ class CoachController {
 
       const duplicate = await CoachService.checkIfDuplicate(data.phoneNumber);
       if (duplicate) {
-        next(new DuplicateError('Phone number already exists'));
+        next(new ConflictError('Phone number already exists'));
       }
       // Call CoachService to create coach
       const {password, ...coach} = await CoachService.createCoach(data);
