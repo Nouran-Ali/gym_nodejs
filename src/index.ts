@@ -13,7 +13,6 @@ import path from 'path';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './config/swaggerConfig';
 // import swaggerFile from '../swagger-output.json';
-import swaggerDef from './config/joiToSwagger.config';
 
 const app = express();
 const port = process.env.PORT || 3000;
