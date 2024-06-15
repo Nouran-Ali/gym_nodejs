@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "start": "npm run build && node dist/index.js",
     "dev": "nodemon",
     "seed": "ts-node prisma/seed.ts",
     "generate-swagger": "npx ts-node src/config/swaggerAutoGen.config.ts",

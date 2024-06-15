@@ -5,10 +5,6 @@ import cors from 'cors';
 import homeRoutes from './routes/homeRoutes';
 import v1Routes from './routes/v1';
 import { errorHandler } from './middlewares/errorHandler';
-import i18next from 'i18next';
-import i18nextMiddleware from 'i18next-express-middleware';
-import i18nConfig from './locales';
-import bodyParser from 'body-parser';
 import path from 'path';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec, { swaggerUiOptions } from './config/swaggerConfig';
@@ -21,7 +17,6 @@ app.use(cors());
 app.use(express.json());
 // app.use(bodyParser.urlencoded({ extended: true }));
 // app.use(bodyParser.json());
-i18next.use(i18nextMiddleware.LanguageDetector).init(i18nConfig);
 
 // routes for api/v1
 app.use('/', homeRoutes);
