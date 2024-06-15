@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import authController from '../../controllers/auth.controller';
-import { upload } from '../../config/multer.config';
 import { authMiddleware } from '../../middlewares/authMiddleware';
 import LoginDTO from '../../dtos/auth.dto';
 import validationMiddleware from '../../middlewares/validationMiddleware';

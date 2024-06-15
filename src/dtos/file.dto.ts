@@ -1,6 +1,12 @@
-// src/dtos/coach.dto.ts
-import Joi from 'joi';
+// dtos/GetFileDTO.ts
+import { IsNotEmpty, IsString } from 'class-validator';
 
-export const getFileSchema = Joi.object({
-  filename: Joi.string().required(),
-});
+export class GetFileDTO {
+  @IsString()
+  @IsNotEmpty()
+  filename!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  bucket!: string;
+}

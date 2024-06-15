@@ -6,7 +6,12 @@ import { ErrorObject } from '../errors/AppError';
 
 const validationMiddleware = (DtoClass: any) => {
   return async (req: Request, res: Response, next: NextFunction) => {
-    const dtoInstance = plainToInstance(DtoClass, req.body);
+    const dtoInstance = plainToInstance(DtoClass, {
+      ...req.body,
+      ...req.params,
+      ...req.query,
+      ...req.files,
+    });
     const errors = await validate(dtoInstance);
 
     if (errors.length > 0) {
@@ -23,6 +28,7 @@ const validationMiddleware = (DtoClass: any) => {
       return;
     }
 
+    (req as any).dtoInstance = dtoInstance;
     next();
   };
 };

@@ -1,8 +1,16 @@
 import { Router } from 'express';
 import InBodyController from '../../controllers/inbody.controller';
-import { createInBodySchema } from '../../dtos/inbody.dto';
+import { CreateInBodyDTO } from '../../dtos/inbody.dto';
 import { authMiddleware } from '../../middlewares/authMiddleware';
-import { upload, uploadInbody } from '../../config/multer.config';
+import { uploadInbodyS3 } from '../../config/multer.config';
+import validationMiddleware from '../../middlewares/validationMiddleware';
+
+/**
+ * @swagger
+ * tags:
+ *   name: InBody
+ *   description: InBody management
+ */
 
 const router = Router();
 /**
@@ -17,82 +25,36 @@ const router = Router();
  *       content:
  *         multipart/form-data:
  *           schema:
- *             type: object
- *             properties:
- *               traineeId:
- *                 type: number
- *               length:
- *                 type: number
- *               weight:
- *                 type: number
- *               shoulder:
- *                 type: number
- *               chest:
- *                 type: number
- *               belowChest:
- *                 type: number
- *               middle:
- *                 type: number
- *               stomach:
- *                 type: number
- *               buttocks:
- *                 type: number
- *               thigh:
- *                 type: number
- *               arm:
- *                 type: number
- *               BMI:
- *                 type: number
- *               currentSituation:
- *                 type: string
- *               dailyWaterNeed:
- *                 type: number
- *               caloriesRequired:
- *                 type: number
- *               muscleWeight:
- *                 type: number
- *               fatMass:
- *                 type: number
- *               boneDensity:
- *                 type: number
- *               bellyFat:
- *                 type: number
- *               dietFile:
- *                 type: string
- *                 description: Reference to the uploaded file
- *             required:
- *               - traineeId
- *               - length
- *               - weight
- *               - shoulder
- *               - chest
- *               - belowChest
- *               - middle
- *               - stomach
- *               - buttocks
- *               - thigh
- *               - arm
- *               - BMI
- *               - currentSituation
- *               - dailyWaterNeed
- *               - caloriesRequired
- *               - muscleWeight
- *               - fatMass
- *               - boneDensity
- *               - bellyFat
+ *             $ref: '#/components/schemas/CreateInBody'
  *     responses:
  *       200:
  *         description: Inbody data created successfully
+ *     tags:
+ *       - InBody
  */
 
 router.post(
   '/inbodies',
-  uploadInbody.single('dietFile'),
+  uploadInbodyS3.single('dietFile'),
   authMiddleware,
-  // validateSchema(createInBodySchema),
+  validationMiddleware(CreateInBodyDTO),
   InBodyController.createInBody
 );
 
+/**
+ * @swagger
+ * /inbodies:
+ *   get:
+ *     summary: Get all inbody data
+ *     description: Retrieve a list of all inbody data records.
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of inbody data records
+ *     tags:
+ *       - InBody
+ */
 router.get('/inbodies', authMiddleware, InBodyController.getAll);
 
 export default router;

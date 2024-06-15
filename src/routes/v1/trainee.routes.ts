@@ -1,14 +1,12 @@
 import { Router } from 'express';
-import {
-  createTraineeSchema,
-  updateTraineeSchema,
-} from '../../dtos/trainee.dto';
 import TraineeController from '../../controllers/trainee.controller';
 import {
   adminMiddleware,
   authMiddleware,
 } from '../../middlewares/authMiddleware';
-import { uploadTrainee } from '../../config/multer.config';
+import { uploadTraineeS3 } from '../../config/multer.config';
+import { CreateTraineeDTO, UpdateTraineeDTO } from '../../dtos/trainee.dto';
+import validationMiddleware from '../../middlewares/validationMiddleware';
 
 const router = Router();
 
@@ -76,11 +74,11 @@ router.post(
   '/trainees',
   authMiddleware,
   adminMiddleware,
-  uploadTrainee.fields([
+  uploadTraineeS3.fields([
     { name: 'idFace', maxCount: 1 },
     { name: 'idBack', maxCount: 1 },
   ]),
-  // validateSchema(createTraineeSchema),
+  validationMiddleware(CreateTraineeDTO),
   TraineeController.createTrainee
 );
 
@@ -123,11 +121,11 @@ router.put(
   '/trainees/:id',
   authMiddleware,
   adminMiddleware,
-  uploadTrainee.fields([
+  uploadTraineeS3.fields([
     { name: 'idFace', maxCount: 1 },
     { name: 'idBack', maxCount: 1 },
   ]),
-  // validateSchema(updateTraineeSchema),
+  validationMiddleware(UpdateTraineeDTO),
   TraineeController.updateTrainee
 );
 

@@ -1,68 +1,251 @@
-// src/schemas/trainee.schema.ts
-import Joi from 'joi';
+import {
+  IsString,
+  IsNotEmpty,
+  IsDateString,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  Validate,
+  IsInt,
+} from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsDateFormat } from '../helpers/isDateFormat'; // Assuming you have a custom date format validator
+import { Gender, SubscriptionStatus, SubscriptionType } from '@prisma/client';
+import { IsFile } from '../helpers/isFileDecorator';
 
-export const createTraineeSchema = Joi.object({
-  parcode: Joi.string().required(),
-  phoneNumber: Joi.string().required(),
-  fullName: Joi.string().required(),
-  gender: Joi.string().valid('MALE', 'FEMALE').required(),
-  dob: Joi.date().required(),
-  subscriptionType: Joi.string().valid('PRIVATE', 'NOT_PRIVATE').required(),
-  subscriptionStatus: Joi.string()
-    .valid('ACTIVE', 'INACTIVE', 'PENDING')
-    .required(),
-  subscriptionStartDate: Joi.date().required(),
-  subscriptionMonths: Joi.number().required(),
-  subscriptionClasses: Joi.number().required(),
-  paid: Joi.number().required(),
-  reminder: Joi.number().required(),
-  idFace: Joi.string().optional(),
-  idBack: Joi.string().optional(),
-  // optional
-  trainingName: Joi.string().optional(),
-  offerName: Joi.string().optional(),
-  medicalProblem: Joi.string().optional(),
-  surgeries: Joi.string().optional(),
-  goal: Joi.string().optional(),
-  sundayNote: Joi.string().optional(),
-  mondayNote: Joi.string().optional(),
-  tuesdayNote: Joi.string().optional(),
-  wednesdayNote: Joi.string().optional(),
-  thursdayNote: Joi.string().optional(),
-  fridayNote: Joi.string().optional(),
-  saturdayNote: Joi.string().optional(),
-  generalNote: Joi.string().optional(),
-});
+export class CreateTraineeDTO {
+  @IsString()
+  @IsNotEmpty()
+  parcode!: string;
 
-export const updateTraineeSchema = Joi.object({
-  // parcode: Joi.string(),
-  phoneNumber: Joi.string(),
-  fullName: Joi.string(),
-  gender: Joi.string().valid('MALE', 'FEMALE'),
-  dob: Joi.date(),
-  subscriptionType: Joi.string().valid('PRIVATE', 'NOT_PRIVATE'),
-  subscriptionStatus: Joi.string().valid('ACTIVE', 'INACTIVE', 'PENDING'),
-  subscriptionDate: Joi.date(),
-  subscriptionStartDate: Joi.date(),
-  subscriptionMonths: Joi.number(),
-  subscriptionClasses: Joi.number(),
-  // remainingClasses: Joi.number(),
-  // subscriptionEndDate: Joi.date(),
-  paid: Joi.number(),
-  reminder: Joi.number(),
-  trainingName: Joi.string(),
-  offerName: Joi.string(),
-  medicalProblem: Joi.string(),
-  surgeries: Joi.string(),
-  goal: Joi.string(),
-  sundayNote: Joi.string(),
-  mondayNote: Joi.string(),
-  tuesdayNote: Joi.string(),
-  wednesdayNote: Joi.string(),
-  thursdayNote: Joi.string(),
-  fridayNote: Joi.string(),
-  saturdayNote: Joi.string(),
-  generalNote: Joi.string(),
-  idFace: Joi.string().optional().allow(null, ''),
-  idBack: Joi.string().optional().allow(null, ''),
-});
+  @IsString()
+  @IsNotEmpty()
+  phoneNumber!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  fullName!: string;
+
+  @IsEnum(Gender)
+  @IsNotEmpty()
+  gender!: Gender;
+
+  @IsString()
+  @IsNotEmpty()
+  @Validate(IsDateFormat, {
+    message: 'Invalid date format. Date must be in YYYY-MM-DD format',
+  })
+  dob!: string;
+
+  @IsEnum(SubscriptionType)
+  @IsNotEmpty()
+  subscriptionType!: SubscriptionType;
+
+  @IsEnum(SubscriptionStatus)
+  @IsNotEmpty()
+  subscriptionStatus!: SubscriptionStatus;
+
+  @IsString()
+  @IsNotEmpty()
+  @Validate(IsDateFormat, {
+    message: 'Invalid date format. Date must be in YYYY-MM-DD format',
+  })
+  subscriptionStartDate!: string;
+
+  @IsInt()
+  @IsNotEmpty()
+  @Transform(({ value }) => parseInt(value, 10), { toClassOnly: true })
+  subscriptionMonths!: number;
+
+  @IsInt()
+  @IsNotEmpty()
+  @Transform(({ value }) => parseInt(value, 10), { toClassOnly: true })
+  subscriptionClasses!: number;
+
+  @IsInt()
+  @IsNotEmpty()
+  @Transform(({ value }) => parseInt(value, 10), { toClassOnly: true })
+  paid!: number;
+
+  @IsInt()
+  @IsNotEmpty()
+  @Transform(({ value }) => parseInt(value, 10), { toClassOnly: true })
+  reminder!: number;
+
+  @IsNotEmpty()
+  idFace!: any;
+
+  @IsNotEmpty()
+  idBack!: any;
+
+  // Optional fields
+  @IsOptional()
+  @IsString()
+  trainingName?: string;
+
+  @IsOptional()
+  @IsString()
+  offerName?: string;
+
+  @IsOptional()
+  @IsString()
+  medicalProblem?: string;
+
+  @IsOptional()
+  @IsString()
+  surgeries?: string;
+
+  @IsOptional()
+  @IsString()
+  goal?: string;
+
+  @IsOptional()
+  @IsString()
+  sundayNote?: string;
+
+  @IsOptional()
+  @IsString()
+  mondayNote?: string;
+
+  @IsOptional()
+  @IsString()
+  tuesdayNote?: string;
+
+  @IsOptional()
+  @IsString()
+  wednesdayNote?: string;
+
+  @IsOptional()
+  @IsString()
+  thursdayNote?: string;
+
+  @IsOptional()
+  @IsString()
+  fridayNote?: string;
+
+  @IsOptional()
+  @IsString()
+  saturdayNote?: string;
+
+  @IsOptional()
+  @IsString()
+  generalNote?: string;
+}
+
+export class UpdateTraineeDTO {
+  @IsString()
+  @IsNotEmpty()
+  parcode!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  phoneNumber!: string;
+
+  @IsOptional()
+  @IsString()
+  fullName?: string;
+
+  @IsOptional()
+  @IsEnum(Gender)
+  gender?: Gender;
+
+  @IsOptional()
+  @IsString()
+  @Validate(IsDateFormat, {
+    message: 'Invalid date format. Date must be in YYYY-MM-DD format',
+  })
+  dob?: string;
+
+  @IsOptional()
+  @IsEnum(SubscriptionType)
+  subscriptionType?: SubscriptionType;
+
+  @IsOptional()
+  @IsEnum(SubscriptionStatus)
+  subscriptionStatus?: SubscriptionStatus;
+
+  @IsOptional()
+  @IsString()
+  @Validate(IsDateFormat, {
+    message: 'Invalid date format. Date must be in YYYY-MM-DD format',
+  })
+  subscriptionStartDate?: string;
+
+  @IsOptional()
+  @IsNumber()
+  subscriptionMonths?: number;
+
+  @IsOptional()
+  @IsNumber()
+  subscriptionClasses?: number;
+
+  @IsOptional()
+  @IsNumber()
+  remainingClasses?: number;
+
+  @IsOptional()
+  @IsNumber()
+  paid?: number;
+
+  @IsOptional()
+  @IsNumber()
+  reminder?: number;
+
+  @IsOptional()
+  @IsString()
+  trainingName?: string;
+
+  @IsOptional()
+  @IsString()
+  offerName?: string;
+
+  @IsOptional()
+  @IsString()
+  medicalProblem?: string;
+
+  @IsOptional()
+  @IsString()
+  surgeries?: string;
+
+  @IsOptional()
+  @IsString()
+  goal?: string;
+
+  @IsOptional()
+  @IsString()
+  sundayNote?: string;
+
+  @IsOptional()
+  @IsString()
+  mondayNote?: string;
+
+  @IsOptional()
+  @IsString()
+  tuesdayNote?: string;
+
+  @IsOptional()
+  @IsString()
+  wednesdayNote?: string;
+
+  @IsOptional()
+  @IsString()
+  thursdayNote?: string;
+
+  @IsOptional()
+  @IsString()
+  fridayNote?: string;
+
+  @IsOptional()
+  @IsString()
+  saturdayNote?: string;
+
+  @IsOptional()
+  @IsString()
+  generalNote?: string;
+
+  @IsOptional()
+  idFace?: any;
+
+  @IsOptional()
+  idBack?: any;
+}

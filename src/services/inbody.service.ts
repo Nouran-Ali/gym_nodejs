@@ -1,10 +1,19 @@
 // src/services/inbody.service.ts
 
-import { Prisma } from '@prisma/client';
 import prisma from '../infrastructure/database/prisma';
+import { CreateInBodyDTO } from '../dtos/inbody.dto';
+import traineeService from './trainee.service';
+import { NotFoundError } from '../errors/NotFoundError';
 
 class InBodyService {
-  async createInBody(data: Prisma.InBodyCreateInput): Promise<any> {
+  async createInBody(dto: CreateInBodyDTO): Promise<any> {
+    const found = await traineeService.getTraineeById(dto.traineeId);
+    if (!found) throw new NotFoundError('Trainee not found');
+
+    const data = {
+      ...dto,
+      dietFile: dto.dietFile ? `inbodies/${dto.dietFile?.filename}` : undefined,
+    };
     return prisma.inBody.create({
       data,
     });

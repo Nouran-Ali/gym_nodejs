@@ -3,6 +3,7 @@
 import { NextFunction, Request, Response } from 'express';
 import InBodyService from '../services/inbody.service';
 import path from 'path';
+import { CreateInBodyDTO } from '../dtos/inbody.dto';
 
 export class InBodyController {
   async createInBody(
@@ -11,17 +12,7 @@ export class InBodyController {
     next: NextFunction
   ): Promise<void> {
     try {
-      let inBodyData = req.body;
-      let dietFile = req.file;
-      if (dietFile) inBodyData.dietFile = `inbodies/${dietFile?.filename}`;
-
-      const notNumberAttributes = ['dietFile', 'currentSituation'];
-
-      for (let key in inBodyData) {
-        if (!notNumberAttributes.includes(key)) {
-          inBodyData[key] = +inBodyData[key];
-        }
-      }
+      let inBodyData : CreateInBodyDTO = (req as any).dtoInstance;
 
       const newInBody = await InBodyService.createInBody(inBodyData);
       res.status(201).json(newInBody);
