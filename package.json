@@ -8,6 +8,7 @@
     "dev": "nodemon",
     "seed": "ts-node prisma/seed.ts",
     "generate-swagger": "npx ts-node src/config/swaggerAutoGen.config.ts",
+    "add-build": "git add dist",
     "build": "rimraf dist && tsc"
   },
   "keywords": [],
