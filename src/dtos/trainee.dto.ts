@@ -7,6 +7,7 @@ import {
   IsOptional,
   Validate,
   IsInt,
+  IsDate,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { IsDateFormat } from '../helpers/isDateFormat'; // Assuming you have a custom date format validator
@@ -32,9 +33,6 @@ export class CreateTraineeDTO {
 
   @IsString()
   @IsNotEmpty()
-  @Validate(IsDateFormat, {
-    message: 'Invalid date format. Date must be in YYYY-MM-DD format',
-  })
   dob!: string;
 
   @IsEnum(SubscriptionType)
@@ -47,9 +45,6 @@ export class CreateTraineeDTO {
 
   @IsString()
   @IsNotEmpty()
-  @Validate(IsDateFormat, {
-    message: 'Invalid date format. Date must be in YYYY-MM-DD format',
-  })
   subscriptionStartDate!: string;
 
   @IsInt()

@@ -30,8 +30,8 @@ class TraineeService {
             data.subscriptionMonths
         )
       ),
-      // idFace: `trainees/${data.idFace[0].filename}`,
-      // idBack: `trainees/${data.idBack[0].filename}`,
+      idFace: `trainees/${data.idFace[0].filename}`,
+      idBack: `trainees/${data.idBack[0].filename}`,
     };
     return await prisma.trainee.create({ data: trainee });
   }

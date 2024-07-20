@@ -56,19 +56,19 @@ export class TraineeController {
         });
       }
 
-      // Extract S3 file keys (or URLs)
-      const idFaceKey = idImgs.idFace[0].key; // Or idImgs.idFace[0].location if you prefer the full URL
-      const idBackKey = idImgs.idBack[0].key; // Or idImgs.idBack[0].location if you prefer the full URL
+      // // Extract S3 file keys (or URLs)
+      // const idFaceKey = idImgs.idFace[0].key; // Or idImgs.idFace[0].location if you prefer the full URL
+      // const idBackKey = idImgs.idBack[0].key; // Or idImgs.idBack[0].location if you prefer the full URL
 
       // Add file keys to trainee data
-      const traineeData = {
-        ...trainee,
-        idFace: idFaceKey,
-        idBack: idBackKey,
-      };
+      // const traineeData = {
+      //   ...trainee,
+      //   idFace: idImgs.idFace[0],
+      //   idBack: idImgs.idBack[0],
+      // };
 
       const { password, ...newTrainee } = await traineeService.createTrainee(
-        traineeData
+        trainee
       );
       res.status(201).json(newTrainee);
     } catch (error: any) {

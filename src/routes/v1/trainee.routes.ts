@@ -4,7 +4,7 @@ import {
   adminMiddleware,
   authMiddleware,
 } from '../../middlewares/authMiddleware';
-import { uploadTraineeS3 } from '../../config/multer.config';
+import { uploadTraineeLocal, uploadTraineeS3 } from '../../config/multer.config';
 import { CreateTraineeDTO, UpdateTraineeDTO } from '../../dtos/trainee.dto';
 import validationMiddleware from '../../middlewares/validationMiddleware';
 
@@ -74,7 +74,7 @@ router.post(
   '/trainees',
   authMiddleware,
   adminMiddleware,
-  uploadTraineeS3.fields([
+  uploadTraineeLocal.fields([
     { name: 'idFace', maxCount: 1 },
     { name: 'idBack', maxCount: 1 },
   ]),
@@ -121,7 +121,7 @@ router.put(
   '/trainees/:id',
   authMiddleware,
   adminMiddleware,
-  uploadTraineeS3.fields([
+  uploadTraineeLocal.fields([
     { name: 'idFace', maxCount: 1 },
     { name: 'idBack', maxCount: 1 },
   ]),
