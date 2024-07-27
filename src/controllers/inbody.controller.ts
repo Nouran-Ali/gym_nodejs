@@ -12,9 +12,10 @@ export class InBodyController {
     next: NextFunction
   ): Promise<void> {
     try {
-      let inBodyData : CreateInBodyDTO = (req as any).dtoInstance;
+      let inBodyData: CreateInBodyDTO = (req as any).dtoInstance;
 
-      const newInBody = await InBodyService.createInBody(inBodyData);
+      const newInBody = await InBodyService.createInBody({...inBodyData, dietFile: req.file});
+
       res.status(201).json(newInBody);
     } catch (error: any) {
       next(error);

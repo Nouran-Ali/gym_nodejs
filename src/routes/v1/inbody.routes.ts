@@ -2,7 +2,7 @@ import { Router } from 'express';
 import InBodyController from '../../controllers/inbody.controller';
 import { CreateInBodyDTO } from '../../dtos/inbody.dto';
 import { authMiddleware } from '../../middlewares/authMiddleware';
-import { uploadInbodyS3 } from '../../config/multer.config';
+import { uploadInbodyLocal, uploadInbodyS3 } from '../../config/multer.config';
 import validationMiddleware from '../../middlewares/validationMiddleware';
 
 /**
@@ -35,7 +35,7 @@ const router = Router();
 
 router.post(
   '/inbodies',
-  uploadInbodyS3.single('dietFile'),
+  uploadInbodyLocal.single('dietFile'),
   authMiddleware,
   validationMiddleware(CreateInBodyDTO),
   InBodyController.createInBody

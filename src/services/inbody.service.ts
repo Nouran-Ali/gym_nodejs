@@ -12,8 +12,11 @@ class InBodyService {
 
     const data = {
       ...dto,
-      dietFile: dto.dietFile ? `inbodies/${dto.dietFile?.filename}` : undefined,
+      dietFile: `inbodies/${dto.dietFile?.filename}`,
     };
+
+    console.log('🚀 ~ InBodyService ~ createInBody ~ data:', data);
+
     return prisma.inBody.create({
       data,
     });

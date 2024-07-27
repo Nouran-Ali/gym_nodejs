@@ -12,6 +12,7 @@ const validationMiddleware = (DtoClass: any) => {
       ...req.query,
       ...req.files,
     });
+    
     const errors = await validate(dtoInstance);
 
     if (errors.length > 0) {
