@@ -130,4 +130,38 @@ router.get(
   attendanceController.getAttendanceByTraineeId
 );
 
+
+/**
+ * @swagger
+ * /attendance/{attendanceId}:
+ *   delete:
+ *     summary: Delete an attendance record by ID
+ *     description: Delete a specific attendance record using its ID.
+ *     parameters:
+ *       - in: path
+ *         name: attendanceId
+ *         schema:
+ *           type: number
+ *         required: true
+ *         description: The ID of the attendance record
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Attendance record deleted successfully
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorized
+ *     tags:
+ *       - Attendance
+ */
+router.delete(
+  '/attendance/:attendanceId',
+  authMiddleware,
+  adminMiddleware,
+  attendanceController.deleteAttendanceById
+);
+
+
 export default router;

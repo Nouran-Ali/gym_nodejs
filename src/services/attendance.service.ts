@@ -19,6 +19,7 @@ class AttendanceService {
     const today = new Date();
     const startOfDay = new Date(today.setHours(0, 0, 0, 0));
     const endOfDay = new Date(today.setHours(23, 59, 59, 999));
+    const subscriptionEndDate = new Date(trainee.subscriptionEndDate);
 
     const duplicateAttendance = await prisma.attendance.findFirst({
       where: {
@@ -33,19 +34,19 @@ class AttendanceService {
     if (duplicateAttendance)
       throw new ConflictError('This trainee has already attended');
 
-    if (trainee.remainingClasses === 0)
+    if (trainee.remainingClasses === 0 || today > subscriptionEndDate)
       throw new BadRequestError({
         remainingClasses: ['You have finished your subscription classes'],
       });
 
-    await traineeService.updateTrainee(
-      trainee.id,
-      plainToInstance(UpdateTraineeDTO, {
+    await prisma.trainee.update({
+      where: { id: trainee.id },
+      data: {
         subscriptionStatus:
           trainee.remainingClasses - 1 === 0 ? 'INACTIVE' : 'ACTIVE',
         remainingClasses: trainee.remainingClasses - 1,
-      })
-    );
+      },
+    });
 
     return prisma.attendance.create({
       data: { traineeId: trainee.id },
@@ -94,6 +95,10 @@ class AttendanceService {
         traineeId,
       },
     });
+  }
+
+  async deleteAttendanceById(id: number) {
+    return await prisma.attendance.delete({ where: { id } });
   }
 }
 

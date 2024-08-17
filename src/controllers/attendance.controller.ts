@@ -47,6 +47,22 @@ class AttendanceController {
       next(error);
     }
   }
+
+  async deleteAttendanceById(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { attendanceId } = req.params;
+      const attendance = await AttendanceService.deleteAttendanceById(
+        +attendanceId
+      );
+      res.status(200).json({ success: true, message: 'attendance deleted successfully'});
+    } catch (error: any) {
+      next(error);
+    }
+  }
 }
 
 export default new AttendanceController();
