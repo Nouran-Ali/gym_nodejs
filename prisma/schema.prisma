@@ -72,7 +72,7 @@ model Trainee {
   trainingName   String?
   offerName      String?
   medicalProblem String?
-  surgeries      String?
+  surgeries      Boolean?
   goal           String?
   sundayNote     String?
   mondayNote     String?

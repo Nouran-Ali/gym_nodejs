@@ -8,6 +8,7 @@ import {
   Validate,
   IsInt,
   IsDate,
+  IsBoolean,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { IsDateFormat } from '../helpers/isDateFormat'; // Assuming you have a custom date format validator
@@ -87,8 +88,8 @@ export class CreateTraineeDTO {
   medicalProblem?: string;
 
   @IsOptional()
-  @IsString()
-  surgeries?: string;
+  @IsBoolean()
+  surgeries?: boolean;
 
   @IsOptional()
   @IsString()
@@ -199,8 +200,8 @@ export class UpdateTraineeDTO {
   medicalProblem?: string;
 
   @IsOptional()
-  @IsString()
-  surgeries?: string;
+  @IsBoolean()
+  surgeries?: boolean;
 
   @IsOptional()
   @IsString()

@@ -1,30 +1,17 @@
-import { Bcrypt } from './../src/helpers/Bcrypt';
-import { Prisma, PrismaClient } from '@prisma/client';
+import { seedCoach } from './seeds/seedCoach';
+import { seedSecretary } from './seeds/seedSecretary';
+import { seedTrainee } from './seeds/seedTrainee';
 
-const prisma = new PrismaClient();
-
-async function seedCoach() {
-  try {
-    const coachData: Prisma.CoachCreateInput = {
-      phoneNumber: '0123456789',
-      fullName: 'John Doe',
-      gender: 'MALE',
-      dob: new Date('1990-01-01'),
-      password: await Bcrypt.hash('123456789'),
-    };
-
-    // Seed the coach data
-    const createdCoach = await prisma.coach.create({
-      data: coachData,
-    });
-
-    console.log('Coach seeded successfully:', createdCoach);
-  } catch (error) {
-    console.error('Error seeding coach data:', error);
-  } finally {
-    await prisma.$disconnect();
-  }
+async function main() {
+  await seedCoach();
+  await seedSecretary();
+  await seedTrainee();
 }
 
-// Run the seeding logic
-seedCoach();
+main()
+  .then(() => {
+    console.log('Seeding completed');
+  })
+  .catch((error) => {
+    console.error('Error during seeding:', error);
+  });
