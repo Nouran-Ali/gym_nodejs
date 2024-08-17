@@ -149,9 +149,6 @@ export class UpdateTraineeDTO {
 
   @IsOptional()
   @IsString()
-  @Validate(IsDateFormat, {
-    message: 'Invalid date format. Date must be in YYYY-MM-DD format',
-  })
   dob?: string;
 
   @IsOptional()
@@ -164,17 +161,18 @@ export class UpdateTraineeDTO {
 
   @IsOptional()
   @IsString()
-  @Validate(IsDateFormat, {
-    message: 'Invalid date format. Date must be in YYYY-MM-DD format',
-  })
   subscriptionStartDate?: string;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
+  @IsNotEmpty()
+  @Transform(({ value }) => parseInt(value, 10), { toClassOnly: true })
   subscriptionMonths?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
+  @IsNotEmpty()
+  @Transform(({ value }) => parseInt(value, 10), { toClassOnly: true })
   subscriptionClasses?: number;
 
   @IsOptional()
@@ -182,11 +180,15 @@ export class UpdateTraineeDTO {
   remainingClasses?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
+  @IsNotEmpty()
+  @Transform(({ value }) => parseInt(value, 10), { toClassOnly: true })
   paid?: number;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
+  @IsNotEmpty()
+  @Transform(({ value }) => parseInt(value, 10), { toClassOnly: true })
   reminder?: number;
 
   @IsOptional()
