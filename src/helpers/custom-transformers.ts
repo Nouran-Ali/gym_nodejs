@@ -26,6 +26,10 @@ export function serializeModel<T>(object: T) {
   };
 }
 
-export function stringToBoolean(value: string): boolean {
-  return value.toLowerCase() === 'true';
+export function stringToBoolean(value: any): boolean {
+  if (typeof value === 'string') {
+    return value.toLowerCase() === 'true';
+  }
+  return false;
 }
+
