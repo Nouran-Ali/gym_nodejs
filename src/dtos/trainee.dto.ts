@@ -14,6 +14,7 @@ import { Transform } from 'class-transformer';
 import { IsDateFormat } from '../helpers/isDateFormat'; // Assuming you have a custom date format validator
 import { Gender, SubscriptionStatus, SubscriptionType } from '@prisma/client';
 import { IsFile } from '../helpers/isFileDecorator';
+import { stringToBoolean } from '../helpers/custom-transformers';
 
 export class CreateTraineeDTO {
   @IsString()
@@ -88,6 +89,7 @@ export class CreateTraineeDTO {
   medicalProblem?: string;
 
   @IsOptional()
+  @Transform(({ value }) => stringToBoolean(value), { toClassOnly: true })
   @IsBoolean()
   surgeries?: boolean;
 
@@ -200,6 +202,7 @@ export class UpdateTraineeDTO {
   medicalProblem?: string;
 
   @IsOptional()
+  @Transform(({ value }) => stringToBoolean(value), { toClassOnly: true })
   @IsBoolean()
   surgeries?: boolean;
 
