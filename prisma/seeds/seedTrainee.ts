@@ -10,6 +10,7 @@ export async function seedTrainee() {
       phoneNumber: '01019818304',
       fullName: 'نوران علي',
       gender: 'FEMALE',
+      trainingName: "تدريب 2",
       dob: new Date('2001-07-23'),
       password: await Bcrypt.hash('01019818304'),
       subscriptionType: 'PRIVATE',
