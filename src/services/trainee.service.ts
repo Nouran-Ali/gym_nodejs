@@ -41,7 +41,7 @@ class TraineeService {
       where: {
         OR: [{ parcode }, { phoneNumber }],
       },
-      select: TraineeWithoutPassword,
+      select: { id: true },
     });
   }
 
@@ -70,7 +70,7 @@ class TraineeService {
     }
 
     let duplicate = await this.checkDuplicate(dto.parcode, dto.phoneNumber);
-    if (duplicate) {
+    if (duplicate && duplicate.id !== id) {
       throw new ConflictError('Phone Number or parcode is already in use');
     }
 
