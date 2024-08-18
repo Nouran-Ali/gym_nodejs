@@ -13,25 +13,17 @@ class TraineeService {
     if (duplicate)
       throw new ConflictError('Phone Number or parcode is already in use');
 
-    const classes = data.subscriptionMonths * data.subscriptionClasses;
-
-    const trainee = {
+    const trainee: Prisma.TraineeCreateInput = {
       ...data,
-      // modify data to accepted by service
-      subscriptionClasses: classes,
-      remainingClasses: classes,
+      subscriptionClasses: data.totalSubscriptionClasses,
+      remainingClasses: data.totalSubscriptionClasses,
       password: await Bcrypt.hash(data.phoneNumber),
-      dob: new Date(data.dob),
-      subscriptionDate: new Date(Date.now()),
-      subscriptionStartDate: new Date(data.subscriptionStartDate),
-      subscriptionEndDate: new Date(
-        new Date(data.subscriptionStartDate).setMonth(
-          new Date(data.subscriptionStartDate).getMonth() +
-            data.subscriptionMonths
-        )
-      ),
-      idFace: `trainees/${data.idFace[0].filename}`,
-      idBack: `trainees/${data.idBack[0].filename}`,
+      dob: data.dobAsDate,
+      subscriptionDate: data.subscriptionDateAsDate,
+      subscriptionStartDate: data.subscriptionStartDateAsDate,
+      subscriptionEndDate: data.subscriptionEndDateAsDate,
+      idFace: data.idFaceAsPath,
+      idBack: data.idBackAsPath,
     };
     return await prisma.trainee.create({ data: trainee });
   }
@@ -52,7 +44,7 @@ class TraineeService {
   async getTraineeById(id: number) {
     return await prisma.trainee.findUnique({
       where: { id },
-      include: { inBodies: true },
+      include: { inBodies: true, attendances: true },
     });
   }
 
@@ -64,7 +56,6 @@ class TraineeService {
 
   async updateTrainee(id: number, dto: UpdateTraineeDTO) {
     const found = await this.getTraineeById(id);
-
     if (!found) {
       throw new NotFoundError('Trainee not found');
     }
@@ -74,37 +65,12 @@ class TraineeService {
       throw new ConflictError('Phone Number or parcode is already in use');
     }
 
-    const data: Prisma.TraineeUpdateInput = {
+    const payload = {
       ...dto,
       dob: dto.dob ? new Date(dto.dob) : undefined,
-      subscriptionStartDate: dto.subscriptionStartDate
-        ? new Date(dto.subscriptionStartDate)
-        : undefined,
-      subscriptionEndDate: dto.subscriptionStartDate
-        ? new Date(
-            new Date(dto.subscriptionStartDate).setMonth(
-              new Date(dto.subscriptionStartDate).getMonth() +
-                (dto.subscriptionMonths || 0)
-            )
-          )
-        : undefined,
-      subscriptionMonths:
-        dto.subscriptionMonths !== undefined
-          ? +dto.subscriptionMonths
-          : undefined,
-      subscriptionClasses:
-        dto.subscriptionClasses !== undefined
-          ? +dto.subscriptionClasses
-          : undefined,
-      remainingClasses:
-        dto.subscriptionClasses !== undefined
-          ? +dto.subscriptionClasses
-          : undefined,
-      paid: dto.paid !== undefined ? +dto.paid : undefined,
-      reminder: dto.reminder !== undefined ? +dto.reminder : undefined,
-      idFace: dto.idFace ? `trainees/${dto.idFace[0].filename}` : undefined,
-      idBack: dto.idBack ? `trainees/${dto.idBack[0].filename}` : undefined,
     };
+
+    const { id: unusedId, ...data } = payload;
 
     return await prisma.trainee.update({
       where: { id },

@@ -55,18 +55,7 @@ export class TraineeController {
           idImages: ['idFace and idBack are required'],
         });
       }
-
-      // // Extract S3 file keys (or URLs)
-      // const idFaceKey = idImgs.idFace[0].key; // Or idImgs.idFace[0].location if you prefer the full URL
-      // const idBackKey = idImgs.idBack[0].key; // Or idImgs.idBack[0].location if you prefer the full URL
-
-      // Add file keys to trainee data
-      // const traineeData = {
-      //   ...trainee,
-      //   idFace: idImgs.idFace[0],
-      //   idBack: idImgs.idBack[0],
-      // };
-
+      
       const { password, ...newTrainee } = await traineeService.createTrainee(
         trainee
       );
@@ -89,7 +78,7 @@ export class TraineeController {
         +id,
         trainee
       );
-      res.status(201).json(newTrainee);
+      res.status(200).json(newTrainee);
     } catch (error: any) {
       next(error);
     }
