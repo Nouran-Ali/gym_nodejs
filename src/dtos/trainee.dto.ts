@@ -246,8 +246,9 @@ export class UpdateTraineeDTO {
   // @IsNotEmpty()
   // @Transform(({ value }) => parseInt(value, 10), { toClassOnly: true })
   // reminder!: number;
+}
 
-  // Optional fields
+export class UpdateTraineeNotesDTO {
   @IsOptional()
   @IsString()
   trainingName?: string;

@@ -8,7 +8,7 @@ import { NotFoundError } from '../errors/NotFoundError';
 import { Bcrypt } from '../helpers/Bcrypt';
 import { ConflictError } from '../errors/ConflictError';
 import { BadRequestError } from '../errors/BadRequestError';
-import { CreateTraineeDTO, UpdateTraineeDTO } from '../dtos/trainee.dto';
+import { CreateTraineeDTO, UpdateTraineeDTO, UpdateTraineeNotesDTO } from '../dtos/trainee.dto';
 
 export class TraineeController {
   async getTrainees(req: Request, res: Response, next: NextFunction) {
@@ -55,7 +55,7 @@ export class TraineeController {
           idImages: ['idFace and idBack are required'],
         });
       }
-      
+
       const { password, ...newTrainee } = await traineeService.createTrainee(
         trainee
       );
@@ -75,6 +75,25 @@ export class TraineeController {
       const trainee: UpdateTraineeDTO = (req as any).dtoInstance;
 
       const { password, ...newTrainee } = await traineeService.updateTrainee(
+        +id,
+        trainee
+      );
+      res.status(200).json(newTrainee);
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  async updateTraineeNotes(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { id } = req.params;
+      const trainee: UpdateTraineeNotesDTO = (req as any).dtoInstance;
+
+      const { password, ...newTrainee } = await traineeService.updateTraineeNotes(
         +id,
         trainee
       );

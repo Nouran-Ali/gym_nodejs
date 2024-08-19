@@ -5,7 +5,7 @@ import {
   authMiddleware,
 } from '../../middlewares/authMiddleware';
 import { uploadTraineeLocal, uploadTraineeS3 } from '../../config/multer.config';
-import { CreateTraineeDTO, UpdateTraineeDTO } from '../../dtos/trainee.dto';
+import { CreateTraineeDTO, UpdateTraineeDTO, UpdateTraineeNotesDTO } from '../../dtos/trainee.dto';
 import validationMiddleware from '../../middlewares/validationMiddleware';
 
 const router = Router();
@@ -121,11 +121,15 @@ router.put(
   '/trainees/:id',
   authMiddleware,
   adminMiddleware,
-  uploadTraineeLocal.fields([
-    { name: 'idFace', maxCount: 1 },
-    { name: 'idBack', maxCount: 1 },
-  ]),
   validationMiddleware(UpdateTraineeDTO),
+  TraineeController.updateTrainee
+);
+
+router.put(
+  '/trainees/notes/:id',
+  authMiddleware,
+  adminMiddleware,
+  validationMiddleware(UpdateTraineeNotesDTO),
   TraineeController.updateTrainee
 );
 

@@ -1,4 +1,4 @@
-import { CreateTraineeDTO, UpdateTraineeDTO } from '../dtos/trainee.dto';
+import { CreateTraineeDTO, UpdateTraineeDTO, UpdateTraineeNotesDTO } from '../dtos/trainee.dto';
 import { ConflictError } from '../errors/ConflictError';
 import { NotFoundError } from '../errors/NotFoundError';
 import { Bcrypt } from '../helpers/Bcrypt';
@@ -75,6 +75,18 @@ class TraineeService {
     return await prisma.trainee.update({
       where: { id },
       data: data,
+    });
+  }
+
+  async updateTraineeNotes(id: number, dto: UpdateTraineeNotesDTO) {
+    const found = await this.getTraineeById(id);
+    if (!found) {
+      throw new NotFoundError('Trainee not found');
+    }
+
+    return await prisma.trainee.update({
+      where: { id },
+      data: dto,
     });
   }
 
