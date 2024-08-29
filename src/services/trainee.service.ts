@@ -54,24 +54,51 @@ class TraineeService {
     });
   }
 
+  // async updateTrainee(id: number, dto: UpdateTraineeDTO) {
+  //   const found = await this.getTraineeById(id);
+  //   if (!found) {
+  //     throw new NotFoundError('Trainee not found');
+  //   }
+
+  //   let duplicate = await this.checkDuplicate(dto.parcode, dto.phoneNumber);
+  //   if (duplicate && duplicate.id !== id) {
+  //     throw new ConflictError('Phone Number or parcode is already in use');
+  //   }
+
+  //   const payload = {
+  //     ...dto,
+  //     dob: dto.dob ? new Date(dto.dob) : undefined,
+  //   };
+
+  //   const { id: unusedId, ...data } = payload;
+
+  //   return await prisma.trainee.update({
+  //     where: { id },
+  //     data: data,
+  //   });
+  // }
+
   async updateTrainee(id: number, dto: UpdateTraineeDTO) {
     const found = await this.getTraineeById(id);
     if (!found) {
       throw new NotFoundError('Trainee not found');
     }
-
+  
     let duplicate = await this.checkDuplicate(dto.parcode, dto.phoneNumber);
     if (duplicate && duplicate.id !== id) {
       throw new ConflictError('Phone Number or parcode is already in use');
     }
-
+  
+    // Convert dates to Date objects if present
     const payload = {
       ...dto,
       dob: dto.dob ? new Date(dto.dob) : undefined,
+      subscriptionDate: dto.subscriptionDate ? new Date(dto.subscriptionDate) : undefined,
+      subscriptionStartDate: dto.subscriptionStartDate ? new Date(dto.subscriptionStartDate) : undefined,
     };
-
+  
     const { id: unusedId, ...data } = payload;
-
+  
     return await prisma.trainee.update({
       where: { id },
       data: data,

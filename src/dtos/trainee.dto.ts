@@ -219,13 +219,13 @@ export class UpdateTraineeDTO {
   // @IsNotEmpty()
   // subscriptionStatus!: SubscriptionStatus;
 
-  // @IsString()
-  // @IsNotEmpty()
-  // subscriptionDate!: string;
+  @IsString()
+  @IsNotEmpty()
+  subscriptionDate!: string;
 
-  // @IsString()
-  // @IsNotEmpty()
-  // subscriptionStartDate!: string;
+  @IsString()
+  @IsNotEmpty()
+  subscriptionStartDate!: string;
 
   // @IsInt()
   // @IsNotEmpty()
