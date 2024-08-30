@@ -11,6 +11,9 @@
     "add-build": "git add dist",
     "build": "tsc"
   },
+  "engines": {
+    "node": "20.16.0"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

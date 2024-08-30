@@ -36,6 +36,6 @@ app.use(errorHandler);
 //   console.log(`Server is running on http://${host}:${port}`);
 // });
 
-app.listen(process.env.PORT , () => {
+app.listen(port , host , () => {
   console.log(`Server is running on http://${host}:${port}`);
 });
