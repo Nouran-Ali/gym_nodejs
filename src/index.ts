@@ -32,10 +32,6 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 app.use(errorHandler);
 
-// app.listen(port, host, () => {
-//   console.log(`Server is running on http://${host}:${port}`);
-// });
-
-app.listen(process.env.PORT , () => {
-  console.log(`Server is running`);
+app.listen(port, host, () => {
+  console.log(`Server is running on http://${host}:${port}`);
 });
