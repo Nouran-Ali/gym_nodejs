@@ -37,5 +37,5 @@ app.use(errorHandler);
 // });
 
 app.listen(process.env.PORT , () => {
-  console.log(`Server is running on http://${host}:${port}`);
+  console.log(`Server is running`);
 });
