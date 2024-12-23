@@ -5,6 +5,8 @@ const prisma = new PrismaClient();
 
 export async function seedTrainee() {
   try {
+    await prisma.trainee.deleteMany();
+
     const traineeData: Prisma.TraineeCreateInput = {
       parcode: '1',
       phoneNumber: '01019818304',
@@ -26,7 +28,6 @@ export async function seedTrainee() {
       surgeries: false,
     };
 
-    // Seed the trainee data
     const createdTrainee = await prisma.trainee.create({
       data: traineeData,
     });

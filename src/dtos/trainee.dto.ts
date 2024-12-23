@@ -1,20 +1,15 @@
 import {
   IsString,
   IsNotEmpty,
-  IsDateString,
   IsEnum,
-  IsNumber,
+  IsInt,
   IsOptional,
   Validate,
-  IsInt,
-  IsDate,
   IsBoolean,
   Matches,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { IsDateFormat } from '../helpers/isDateFormat'; // Assuming you have a custom date format validator
 import { Gender, SubscriptionStatus, SubscriptionType } from '@prisma/client';
-import { IsFile } from '../helpers/isFileDecorator';
 import { stringToBoolean } from '../helpers/custom-transformers';
 import dayjs from 'dayjs';
 
@@ -183,6 +178,127 @@ export class CreateTraineeDTO {
   }
 }
 
+// export class UpdateTraineeDTO {
+//   @IsString()
+//   @IsNotEmpty()
+//   id!: string;
+
+//   @IsString()
+//   @IsNotEmpty()
+//   parcode!: string;
+
+//   @IsString()
+//   @IsNotEmpty()
+//   phoneNumber!: string;
+
+//   @IsString()
+//   @IsNotEmpty()
+//   fullName!: string;
+
+//   @IsEnum(Gender)
+//   @IsNotEmpty()
+//   gender!: Gender;
+
+//   @IsString()
+//   @IsNotEmpty()
+//   @Matches(/^\d{4}-\d{2}-\d{2}$/, {
+//     message: 'dob must be in the format YYYY-MM-DD',
+//   })
+//   dob!: string;
+
+//   @IsEnum(SubscriptionType)
+//   @IsNotEmpty()
+//   subscriptionType!: SubscriptionType;
+
+//   @IsEnum(SubscriptionStatus) // Include subscriptionStatus here
+//   @IsNotEmpty()
+//   subscriptionStatus!: SubscriptionStatus; // Add this line
+
+//   @IsString()
+//   @IsNotEmpty()
+//   subscriptionDate!: string;
+
+//   @IsString()
+//   @IsNotEmpty()
+//   @Matches(/^\d{4}-\d{2}-\d{2}$/, {
+//     message: 'subscriptionStartDate must be in the format YYYY-MM-DD',
+//   })
+//   subscriptionStartDate!: string;
+
+//   @IsInt()
+//   @IsNotEmpty()
+//   @Transform(({ value }) => parseInt(value, 10), { toClassOnly: true })
+//   subscriptionMonths!: number;
+
+//   // Automatically calculate the end date based on start date and months
+//   get subscriptionEndDate(): string {
+//     const startDate = dayjs(this.subscriptionStartDate);
+//     const endDate = startDate.add(this.subscriptionMonths, 'month').format('YYYY-MM-DD');
+//     return endDate;
+//   }
+// }
+
+// export class UpdateTraineeDTO {
+//   @IsString()
+//   @IsNotEmpty()
+//   id!: string;
+
+//   @IsString()
+//   @IsNotEmpty()
+//   parcode!: string;
+
+//   @IsString()
+//   @IsNotEmpty()
+//   phoneNumber!: string;
+
+//   @IsString()
+//   @IsNotEmpty()
+//   fullName!: string;
+
+//   @IsEnum(Gender)
+//   @IsNotEmpty()
+//   gender!: Gender;
+
+//   @IsString()
+//   @IsNotEmpty()
+//   @Matches(/^\d{4}-\d{2}-\d{2}$/, {
+//     message: 'dob must be in the format YYYY-MM-DD',
+//   })
+//   dob!: string;
+
+//   @IsEnum(SubscriptionType)
+//   @IsNotEmpty()
+//   subscriptionType!: SubscriptionType;
+
+//   @IsString()
+//   @IsNotEmpty()
+//   subscriptionDate!: string;
+
+//   @IsString()
+//   @IsNotEmpty()
+//   @Matches(/^\d{4}-\d{2}-\d{2}$/, {
+//     message: 'subscriptionStartDate must be in the format YYYY-MM-DD',
+//   })
+//   subscriptionStartDate!: string;
+
+//   @IsInt()
+//   @IsNotEmpty()
+//   @Transform(({ value }) => parseInt(value, 10), { toClassOnly: true })
+//   subscriptionMonths!: number;
+
+//   @IsInt()
+//   @IsNotEmpty()
+//   @Transform(({ value }) => parseInt(value, 10), { toClassOnly: true })
+//   subscriptionClasses!: number; // Ensure this property is added
+
+//   // Automatically calculate the end date based on start date and months
+//   get subscriptionEndDate(): string {
+//     const startDate = dayjs(this.subscriptionStartDate);
+//     const endDate = startDate.add(this.subscriptionMonths, 'month').format('YYYY-MM-DD');
+//     return endDate;
+//   }
+// }
+
 export class UpdateTraineeDTO {
   @IsString()
   @IsNotEmpty()
@@ -215,9 +331,9 @@ export class UpdateTraineeDTO {
   @IsNotEmpty()
   subscriptionType!: SubscriptionType;
 
-  // @IsEnum(SubscriptionStatus)
-  // @IsNotEmpty()
-  // subscriptionStatus!: SubscriptionStatus;
+  @IsEnum(SubscriptionStatus) // Ensure subscriptionStatus can be updated
+  @IsOptional()  // Make it optional for partial updates
+  subscriptionStatus?: SubscriptionStatus;
 
   @IsString()
   @IsNotEmpty()
@@ -225,28 +341,28 @@ export class UpdateTraineeDTO {
 
   @IsString()
   @IsNotEmpty()
+  @Matches(/^\d{4}-\d{2}-\d{2}$/, {
+    message: 'subscriptionStartDate must be in the format YYYY-MM-DD',
+  })
   subscriptionStartDate!: string;
 
-  // @IsInt()
-  // @IsNotEmpty()
-  // @Transform(({ value }) => parseInt(value, 10), { toClassOnly: true })
-  // subscriptionMonths!: number;
+  @IsInt()
+  @IsNotEmpty()
+  @Transform(({ value }) => parseInt(value, 10), { toClassOnly: true })
+  subscriptionMonths!: number;
 
-  // @IsInt()
-  // @IsNotEmpty()
-  // @Transform(({ value }) => parseInt(value, 10), { toClassOnly: true })
-  // subscriptionClasses!: number;
+  @IsInt()
+  @IsNotEmpty()
+  @Transform(({ value }) => parseInt(value, 10), { toClassOnly: true })
+  subscriptionClasses!: number;
 
-  // @IsInt()
-  // @IsNotEmpty()
-  // @Transform(({ value }) => parseInt(value, 10), { toClassOnly: true })
-  // paid!: number;
-
-  // @IsInt()
-  // @IsNotEmpty()
-  // @Transform(({ value }) => parseInt(value, 10), { toClassOnly: true })
-  // reminder!: number;
+  get subscriptionEndDate(): string {
+    const startDate = dayjs(this.subscriptionStartDate);
+    const endDate = startDate.add(this.subscriptionMonths, 'month').format('YYYY-MM-DD');
+    return endDate;
+  }
 }
+
 
 export class UpdateTraineeNotesDTO {
   @IsOptional()

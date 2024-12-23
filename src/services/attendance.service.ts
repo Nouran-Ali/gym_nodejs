@@ -34,7 +34,7 @@ class AttendanceService {
     if (duplicateAttendance)
       throw new ConflictError('This trainee has already attended');
 
-    if (trainee.remainingClasses === 0 || today > subscriptionEndDate)
+    if (trainee.remainingClasses === 0)
       throw new BadRequestError({
         remainingClasses: ['You have finished your subscription classes'],
       });
